@@ -1,0 +1,40 @@
+# ====================================================================
+# Gitignore - Airflow Medallion Pipeline (Fluminense & Supabase)
+# ====================================================================
+
+# 1. Configurações de Ambiente e Credenciais (CRÍTICO - NÃO SUBIR)
+.env
+.env.*
+secrets.json
+
+# 2. Dados Locais e Backups (Simulação do Data Lake)
+data/
+data/bronze/
+data/silver/
+data/gold/
+
+# 3. Logs de Execução do Airflow (Grandes e transitórios)
+logs/
+*.log
+
+# 4. Cache do Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.cache/
+
+# 5. Caches e Configurações de IDEs (Opcional)
+.vscode/
+.idea/
+.gemini/
+.gemini-ide/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+# 6. Banco de Dados Local do Docker (PostgreSQL persistido)
+postgres-db-volume/
