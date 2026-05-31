@@ -12,27 +12,24 @@ O pipeline é composto por 3 DAGs totalmente desacopladas que se comunicam e se 
 
 ```mermaid
 graph TD
-    subgraph 1. Camada Bronze (Ingestão)
+    subgraph bronze ["1. Camada Bronze (Ingestão)"]
         A[Sportmonks API v3] -->|HTTP GET / Token| B[SportmonksHook]
         B -->|Salva JSON Bruto| C[data/bronze/*.json]
         B -->|Insere Payloads JSONB| D[(Supabase: bronze_squad & bronze_fixtures)]
     end
 
-    D -->|Gatilho BRONZE_ASSET| E[2. Camada Silver (Transformação)]
-
-    subgraph 2. Camada Silver (Tratamento)
-        E -->|Consome dados Bronze| F[Pandas Data Parser]
-        F -->|Salva CSV Relacional| G[data/silver/*.csv]
+    subgraph silver ["2. Camada Silver (Tratamento)"]
+        F[Pandas Data Parser] -->|Salva CSV Relacional| G[data/silver/*.csv]
         F -->|UPSERT Relacional/Tipado| H[(Supabase: silver_squad & silver_fixtures)]
     end
 
-    H -->|Gatilho SILVER_ASSET| I[3. Camada Gold (Analytics)]
-
-    subgraph 3. Camada Gold (Indicadores)]
-        I -->|Consome dados Silver| J[Pandas Aggregator]
-        J -->|Salva CSV Analítico| K[data/gold/*.csv]
+    subgraph gold ["3. Camada Gold (Indicadores)"]
+        J[Pandas Aggregator] -->|Salva CSV Analítico| K[data/gold/*.csv]
         J -->|UPSERT Visões Agregadas| L[(Supabase: gold_squad_summary & gold_fixtures_summary)]
     end
+
+    D -->|Gatilho BRONZE_ASSET| F
+    H -->|Gatilho SILVER_ASSET| J
 ```
 
 ---
